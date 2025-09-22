@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bank Kita</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background-color: #91c8e4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .app-container {
+        width: 100%;
+        max-width: 360px;
+        height: 90vh;
+        background-color: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background-color: #0054a6;
+        color: white;
+        padding: 16px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .content {
+        padding: 24px;
+        text-align: center;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .lock-icon {
+        font-size: 24px;
+        color: #0054a6;
+      }
+
+      .title {
+        margin: 12px 0 4px;
+        font-size: 18px;
+        color: #0054a6;
+        font-weight: 600;
+      }
+
+      .subtitle {
+        color: gray;
+        font-size: 14px;
+      }
+
+      .pin-display {
+        margin: 20px auto;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        position: relative;
+      }
+
+      .pin-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 1.5px solid #0054a6;
+        background-color: white;
+      }
+
+      .pin-dot.filled {
+        background-color: #0054a6;
+      }
+
+      .eye-icon {
+        position: absolute;
+        right: -30px;
+        top: 0;
+        font-size: 18px;
+        color: #666;
+      }
+
+      .keypad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 20px;
+        padding-bottom: 20px;
+        background-color: #f7f7f7;
+        border-top: 1px solid #ddd;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        height: 30%;
+      }
+
+      .keypad button {
+        padding: 10px 0;
+        font-size: 20px;
+        border: none;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .keypad button:hover {
+        background-color: #e0e0e0;
+      }
+
+      .keypad .empty {
+        background: transparent;
+        box-shadow: none;
+        cursor: default;
+      }
+
+      .message {
+        color: red;
+        font-size: 14px;
+        margin-top: 10px;
+        min-height: 20px;
+      }
+
+      .success-page {
+        display: none;
+        flex-direction: column;
+        height: 90vh;
+        padding: 0;
+      }
+
+      .success-content {
+        flex-grow: 1;
+        padding: 0 24px;
+        text-align: center;
+      }
+
+      .checkmark {
+        font-size: 50px;
+        color: #0054a6;
+      }
+
+      .success-page h2 {
+        font-size: 26px;
+        margin: 16px 0;
+        color: #0054a6;
+      }
+
+      .transaksi-berhasil {
+        text-align: center;
+        font-size: 16px;
+        margin-top: 5px;
+        color: #0054a6;
+      }
+
+      .nominal {
+        text-align: center;
+        font-size: 25px;
+        margin-top: 5px;
+        color: #0054a6;
+      }
+
+      .success-details {
+        text-align: left;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .success-details {
+        text-align: left;
+        font-size: 14px;
+        margin-top: 20px;
+        color: #333;
+      }
+
+      .success-details b {
+        color: #0054a6;
+      }
+
+      .btn-done {
+        margin: 0 20px 20px;
+        padding: 12px 0;
+        width: auto;
+        background-color: #0054a6;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .ojk-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #666;
+        margin-top: -10px;
+        margin-bottom: 8px;
+      }
+
+      .ojk-info img {
+        width: 60px;
+        height: auto;
+      }
+
+      .bank-logo {
+        width: 40px;
+        display: block;
+        margin: 20px auto 0px auto;
+      }
+
+      .dashed-line {
+        border: none;
+        border-top: 2px dashed #ccc;
+        margin: 10px 0 5px 0;
+      }
+
+      .checkmark {
+        width: 50px;
+        display: block;
+        margin: 20px auto 10px auto;
+      }
+      /* Overlay tutorial */
+      .tutorial-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 10000;
+        display: none;
+
+        /* penting: biar semua klik tembus ke bawah */
+        pointer-events: none;
+      }
+
+      .tutorial-textbox {
+        position: fixed;
+        bottom: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 300px;
+        background: white;
+        color: #333;
+        padding: 16px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        z-index: 10001;
+
+        /* textbox bisa diklik */
+        pointer-events: auto;
+      }
+
+      .tutorial-textbox button {
+        margin-top: 12px;
+        background: #0054a6;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .repeat-link {
+        text-align: center;
+        font-size: 12px;
+        color: #0054a6;
+        cursor: pointer;
+        margin-right: 20px;
+        margin-bottom: 15px;
+      }
+
+      .repeat-link:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 480px) {
+        body {
+          align-items: flex-start;
+          padding: 10px;
+        }
+
+        .app-container {
+          width: 100%;
+          max-width: none;
+          height: auto;
+          min-height: 100vh;
+          border-radius: 0;
+        }
+
+        .content {
+          padding: 16px;
+        }
+
+        .keypad {
+          gap: 8px;
+          padding: 12px;
+        }
+
+        .keypad button {
+          padding: 12px 0;
+          font-size: 18px;
+        }
+
+        .bank-logo {
+          width: 50px;
+          margin-top: 10px;
+        }
+
+        .checkmark {
+          width: 60px;
+        }
+
+        .success-page h2 {
+          font-size: 20px;
+        }
+
+        .nominal {
+          font-size: 20px;
+        }
+
+        .success-details {
+          font-size: 12px;
+        }
+
+        .btn-done {
+          font-size: 14px;
+          padding: 10px;
+        }
+
+        .tutorial-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.7);
+          z-index: 10000;
+          display: none;
+          pointer-events: none; /* biar cuma textbox yg bisa diklik */
+        }
+
+        .tutorial-textbox {
+          position: fixed;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          max-width: 320px;
+          width: calc(100% - 40px);
+          background: white;
+          color: #333;
+          padding: 5px;
+          border-radius: 12px;
+          text-align: center;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+          z-index: 10001;
+          pointer-events: auto;
+        }
+
+        .tutorial-textbox button {
+          margin-top: 3px;
+          background: #0054a6;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Halaman PIN -->
+    <div class="app-container" id="pinPage">
+      <div class="header">Verifikasi Transaksi</div>
+      <div class="content">
+        <div class="lock-icon">🔒</div>
+        <div class="title">PIN Transaksi</div>
+        <div class="subtitle">Silakan masukkan PIN Anda</div>
+
+        <div class="pin-display" id="pinDots">
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+          <div class="pin-dot"></div>
+        </div>
+
+        <div class="message" id="message"></div>
+      </div>
+
+      <div
+        class="repeat-link"
+        onclick="window.location.href='penjelasan_b2.html'"
+      >
+        ↻ Ulangi Eksperimen
+      </div>
+
+      <div class="ojk-info">
+        <span>Diawasi oleh</span>
+        <img src="../ojk.png" alt="Logo OJK" />
+      </div>
+
+      <div class="keypad">
+        <button onclick="inputDigit('1')">1</button>
+        <button onclick="inputDigit('2')">2</button>
+        <button onclick="inputDigit('3')">3</button>
+        <button onclick="inputDigit('4')">4</button>
+        <button onclick="inputDigit('5')">5</button>
+        <button onclick="inputDigit('6')">6</button>
+        <button onclick="inputDigit('7')">7</button>
+        <button onclick="inputDigit('8')">8</button>
+        <button onclick="inputDigit('9')">9</button>
+        <button class="empty"></button>
+        <button onclick="inputDigit('0')">0</button>
+        <button onclick="deleteDigit()">⌫</button>
+      </div>
+    </div>
+
+    <!-- Halaman Transaksi Berhasil -->
+    <div class="app-container success-page" id="successPage">
+      <div class="header">Status</div>
+      <div class="success-content">
+        <!-- Logo Bank Kita -->
+        <img src="../bank_kita.png" alt="Bank Kita Logo" class="bank-logo" />
+
+        <!-- Garis putus-putus -->
+        <hr class="dashed-line" />
+
+        <!-- Checkmark -->
+        <img src="../checkmark.png" alt="checkmark" class="checkmark" />
+        <p class="transaksi-berhasil"><b>Transaksi Berhasil</b></p>
+        <p class="nominal"><b>IDR 102.500,00</b></p>
+
+        <div class="success-details">
+          <p><b>Tanggal Transaksi:</b> 05 Agustus 2025</p>
+          <p><b>Jenis Transaksi:</b> Transfer Langsung</p>
+          <p><b>Sumber Dana:</b> 123-4**...**10</p>
+          <p><b>No. Tagihan:</b> 1234567890</p>
+          <p><b>Nominal Bayar:</b> IDR 100.000,00</p>
+          <p><b>Biaya Admin:</b> IDR 2.500,00</p>
+        </div>
+      </div>
+
+      <button
+        class="btn-done"
+        style="background-color: gray"
+        onclick="window.location.href='penjelasan_b2.html'"
+      >
+        Ulangi Simulasi
+      </button>
+      <button
+        class="btn-done"
+        onclick="window.open('https://forms.gle/reXL56JUbLUtRUpx9','_blank')"
+      >
+        Selesai
+      </button>
+    </div>
+
+    <!-- Overlay Tutorial -->
+    <div class="tutorial-overlay" id="tutorialOverlay"></div>
+    <div class="tutorial-textbox" id="tutorialTextbox" style="display: none">
+      <p id="tutorialMessage"></p>
+      <button id="tutorialNext">Lanjut</button>
+    </div>
+
+    <script>
+      const steps = [
+        {
+          element: document.querySelector(".ojk-info"),
+          message:
+            "Bagian ini adalah indikator visual keamanan: 'Diawasi oleh OJK'.",
+          highlight: true,
+          action: null,
+        },
+        {
+          element: document.querySelector(".keypad"),
+          message:
+            "PIN akan digunakan sebagai metode autentikasi untuk verifikasi transaksi.",
+          highlight: false,
+          action: null,
+        },
+      ];
+
+      let currentStep = 0;
+      const overlay = document.getElementById("tutorialOverlay");
+      const messageBox = document.getElementById("tutorialTextbox");
+      const messageText = document.getElementById("tutorialMessage");
+      const nextBtn = document.getElementById("tutorialNext");
+
+      function showStep(stepIndex) {
+        const step = steps[stepIndex];
+        if (!step) return;
+
+        overlay.style.display = "block";
+        messageBox.style.display = "block";
+
+        // kalau step punya action, jalankan
+        if (typeof step.action === "function") {
+          step.action();
+        }
+
+        if (step.highlight) {
+          const rect = step.element.getBoundingClientRect();
+          const padding = 8;
+          const top = rect.top - padding;
+          const left = rect.left;
+          const right = rect.right;
+          const bottom = rect.bottom + padding;
+
+          overlay.style.clipPath = `polygon(
+        0 0, 100% 0, 100% 100%, 0 100%,
+        0 ${top}px, ${left}px ${top}px, ${left}px ${bottom}px,
+        ${right}px ${bottom}px, ${right}px ${top}px, 0 ${top}px
+      )`;
+        } else {
+          overlay.style.clipPath = "none";
+        }
+
+        messageText.textContent = step.message;
+        nextBtn.textContent =
+          stepIndex === steps.length - 1 ? "Mulai" : "Lanjut";
+      }
+
+      nextBtn.addEventListener("click", () => {
+        currentStep++;
+        if (currentStep < steps.length) {
+          showStep(currentStep);
+        } else {
+          overlay.style.display = "none";
+          messageBox.style.display = "none";
+        }
+      });
+
+      let pinInput = "";
+      const correctPIN = "123456";
+
+      function updateDots() {
+        const dots = document.querySelectorAll(".pin-dot");
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("filled", index < pinInput.length);
+        });
+      }
+
+      function inputDigit(digit) {
+        if (pinInput.length === 0) {
+          document.getElementById("message").textContent = "";
+        }
+
+        if (pinInput.length < 6) {
+          pinInput += digit;
+          updateDots();
+          if (pinInput.length === 6) {
+            setTimeout(checkPIN, 300);
+          }
+        }
+      }
+
+      function deleteDigit() {
+        pinInput = pinInput.slice(0, -1);
+        updateDots();
+        document.getElementById("message").textContent = "";
+      }
+
+      function checkPIN() {
+        if (pinInput === correctPIN) {
+          setTimeout(() => {
+            document.getElementById("pinPage").style.display = "none";
+            document.getElementById("successPage").style.display = "flex";
+          }, 1000);
+        } else {
+          document.getElementById("message").textContent =
+            "PIN salah. Silakan coba lagi.";
+          pinInput = "";
+          updateDots();
+        }
+      }
+
+      // Modal functions
+      function openPrivacy() {
+        document.getElementById("privacyModal").style.display = "block";
+      }
+      function closePrivacy() {
+        document.getElementById("privacyModal").style.display = "none";
+      }
+      window.onclick = function (event) {
+        if (event.target == document.getElementById("privacyModal")) {
+          closePrivacy();
+        }
+      };
+
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          showStep(0);
+        }, 300);
+      });
+    </script>
+  </body>
+</html>

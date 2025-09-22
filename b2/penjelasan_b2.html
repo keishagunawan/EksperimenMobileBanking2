@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Penjelasan Kondisi Eksperimen</title>
+    <style>
+      :root {
+        --c1: #9fb3df;
+        --c2: #9ec6f3;
+        --c3: #bddde4;
+        --c4: #fff1d5;
+        --dark: #333;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, var(--c1), var(--c3));
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        max-width: 850px;
+        width: 100%;
+        overflow: hidden;
+        animation: fadeIn 1s ease forwards;
+      }
+
+      .header {
+        background: var(--c2);
+        color: var(--dark);
+        padding: 24px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #fff;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      ol {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      ol li {
+        margin-bottom: 15px;
+        opacity: 0;
+        transform: translateY(10px);
+        animation: slideUp 0.6s ease forwards;
+      }
+
+      ol li:nth-child(1) {
+        animation-delay: 0.2s;
+      }
+      ol li:nth-child(2) {
+        animation-delay: 0.4s;
+      }
+      ol li:nth-child(3) {
+        animation-delay: 0.6s;
+      }
+      ol li:nth-child(4) {
+        animation-delay: 0.8s;
+      }
+      ol li:nth-child(5) {
+        animation-delay: 1s;
+      }
+      ol li:nth-child(6) {
+        animation-delay: 1.2s;
+      }
+
+      button {
+        display: block;
+        margin: 30px auto 0;
+        padding: 14px 32px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 30px;
+        background: var(--c1);
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+      }
+
+      button:hover {
+        background: var(--c2);
+        transform: translateY(-2px);
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes slideUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 1.6rem;
+        }
+        .content {
+          padding: 20px;
+        }
+        button {
+          width: 100%;
+          border-radius: 12px;
+          padding: 14px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 10px;
+        }
+        .header h1 {
+          font-size: 1.4rem;
+        }
+        ol {
+          font-size: 0.95rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Eksperimen Simulasi Transaksi pada Mobile Banking (B2)</h1>
+      </div>
+      <div class="content">
+        <ol>
+          <li>
+            Anda akan melakukan
+            <b
+              >simulasi proses verifikasi dalam mobile banking sebelum melakukan
+              transaksi/pembayaran pada aplikasi Bank Kita</b
+            >.
+          </li>
+          <li>
+            Kondisi eksperimen: anggap Anda sedang melakukan proses verifikasi
+            pada aplikasi mobile banking yang nyata.
+          </li>
+          <li>
+            Data yang Anda masukkan dalam proses verifikasi harus dianggap
+            sebagai data pribadi Anda sendiri.
+          </li>
+          <li>PIN yang perlu Anda masukkan adalah: <b>123456</b>.</li>
+          <li>
+            Perlakukan PIN tersebut seolah merupakan PIN pribadi Anda dan jaga
+            kerahasiaannya sebagaimana dalam situasi nyata.
+          </li>
+          <li>
+            Perhatikan dengan saksama metode autentikasi dan indikator visual
+            keamanan yang ditampilkan.
+          </li>
+        </ol>
+        <button onclick="startExperiment()">Mulai Eksperimen</button>
+      </div>
+    </div>
+
+    <script>
+      function startExperiment() {
+        window.location.href = "b2.html";
+      }
+    </script>
+  </body>
+</html>

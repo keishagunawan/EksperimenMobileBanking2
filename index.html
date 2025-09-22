@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Penjelasan Eksperimen</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #9ec6f3, #fff1d5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding-bottom: 90px;
+      }
+
+      .container {
+        display: flex;
+        border-radius: 20px;
+        animation: fadeIn 1s ease-in-out;
+        background: rgba(255, 255, 255, 0);
+        width: fit-content;
+        height: fit-content;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .text-section img {
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        object-fit: contain;
+      }
+
+      .floating-button {
+        position: fixed;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 18px 40px;
+        font-size: 1.2rem;
+        border: none;
+        border-radius: 35px;
+        background: linear-gradient(135deg, #9fb3df, #bddde4);
+        color: #fff;
+        cursor: pointer;
+        transition: 0.3s;
+        font-weight: bold;
+        letter-spacing: 0.8px;
+        z-index: 1000;
+      }
+
+      .floating-button:hover {
+        transform: translateX(-50%) translateY(-4px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Overlay loading */
+      .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.95);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 9999;
+      }
+
+      .spinner {
+        border: 6px solid #f3f3f3;
+        border-top: 6px solid #9fb3df;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 15px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .loading-overlay p {
+        font-size: 1.2rem;
+        color: #333;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        body {
+          height: auto;
+          padding: 20px;
+        }
+
+        .container {
+          flex-direction: column;
+          width: 100%;
+          border-radius: 12px;
+          min-height: auto;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          flex-direction: column;
+          width: 100%;
+          border-radius: 15px;
+          min-height: auto;
+        }
+
+        .text-section {
+          padding: 0;
+        }
+
+        .text-section img {
+          width: 100%;
+          height: auto;
+          border-radius: 12px;
+        }
+      }
+
+      @media (min-width: 769px) {
+        .text-section img {
+          max-height: 650px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="text-section">
+        <picture>
+          <source srcset="penjelasan_portrait.png" media="(max-width: 480px)" />
+          <img src="penjelasan_landscape.png" alt="Penjelasan Eksperimen" />
+        </picture>
+      </div>
+    </div>
+
+    <button class="floating-button" onclick="startExperiment()">
+      Selanjutnya
+    </button>
+
+    <!-- Overlay Loading -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+      <p>Sedang memproses...</p>
+    </div>
+
+    <script>
+      async function startExperiment() {
+        const overlay = document.getElementById("loadingOverlay");
+        overlay.style.display = "flex";
+
+        try {
+          const response = await fetch(
+            "https://script.google.com/macros/s/AKfycbwN1_FW9DgmGKnwO9xaOiEHbQOeYt4zIfVP__HcWggoRXE9rAptWXZGm1cUmfsH973r/exec"
+          );
+          const data = await response.json();
+          const condition = data.condition;
+
+          window.location.href = `./${condition.toLowerCase()}/penjelasan_${condition.toLowerCase()}.html`;
+        } catch (err) {
+          console.error("Error:", err);
+          overlay.style.display = "none";
+          alert("Gagal mengambil kondisi, coba lagi.");
+        }
+      }
+    </script>
+  </body>
+</html>
